@@ -32,4 +32,14 @@ export class UsersController {
   async login(@Body() loginDto: LoginDto) {
     return this.usersService.login(loginDto);
   }
+
+  @ApiOperation({ summary: 'Register user by google' })
+  @Post('google-register')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns the reference id and email of the user registered',
+  })
+  registerUserWithGoogle(@Body() body: CreateUserDto): any {
+    return this.usersService.registerWithGoogle(body);
+  }
 }

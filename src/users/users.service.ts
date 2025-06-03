@@ -10,6 +10,16 @@ import { CreateUserDto, LoginDto } from './users.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
+function generateRandomString(length: number = 16): string {
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -17,6 +27,21 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
+
+  async registerWithGoogle(createUserDto: CreateUserDto) {
+    const { email } = createUserDto;
+    const existing = await this.userRepository.findOne({ where: { email } });
+    if (!existing) {
+      const hashedPassword = await bcrypt.hash(generateRandomString(), 10);
+      const newUser = this.userRepository.create({
+        email,
+        password: hashedPassword,
+        provider: 'google',
+      });
+      await this.userRepository.save(newUser);
+    }
+    return { email };
+  }
 
   async register(createUserDto: CreateUserDto) {
     const { username, email, password, provider } = createUserDto;
