@@ -18,11 +18,7 @@ export class UsersService {
     private jwtService: JwtService,
   ) {}
 
-  async getAllUsers(): Promise<User[]> {
-    return this.userRepository.find(); // fetches all users
-  }
-
-  async register(createUserDto: CreateUserDto): Promise<User> {
+  async register(createUserDto: CreateUserDto) {
     const { username, email, password } = createUserDto;
 
     const existing = await this.userRepository.findOne({ where: { email } });
@@ -36,22 +32,39 @@ export class UsersService {
       email,
       password: hashedPassword,
     });
-    return this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
+    return {
+      message: 'Success',
+      email,
+    };
   }
 
   async findByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email } });
+    try {
+      const user = await this.userRepository.findOne({ where: { email } });
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      const { password, ...safeUser } = user;
+      return safeUser;
+    } catch {
+      throw new UnauthorizedException('Invalid credentials');
+    }
   }
 
   async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
-    const user = await this.findByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Invalid credentials');
+    try {
+      const { email, password } = loginDto;
+      const user = await this.userRepository.findOne({ where: { email } });
+      if (!user || !(await bcrypt.compare(password, user?.password))) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      const payload = { sub: user?.id, email: user?.email };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    } catch {
+      return { message: 'Invalid credentials' };
     }
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
   }
 }

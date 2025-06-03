@@ -18,6 +18,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(client: any) {
+    console.log(client);
     const userId = client.handshake.query.userId.toString();
     if (userId) {
       this.connectedClients.set(userId, client);
