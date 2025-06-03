@@ -1,5 +1,5 @@
 // src/chat/chat.controller.ts
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { ChatMessage } from './entities/chat.entity';
 import { CreateChatDto } from './chat.dto';
@@ -16,7 +16,7 @@ export class ChatController {
   }
 
   @Post('add-message')
-  async addMessage(createChatDto: CreateChatDto) {
+  async addMessage(@Body() createChatDto: CreateChatDto) {
     return this.chatService.saveMessage(createChatDto);
   }
 }
