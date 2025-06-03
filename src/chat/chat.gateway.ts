@@ -18,7 +18,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(client: any) {
-    console.log(client);
     const userId = client.handshake.query.userId.toString();
     if (userId) {
       this.connectedClients.set(userId, client);
@@ -36,29 +35,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  @SubscribeMessage('sendMessage')
-  async handleMessage(
-    @MessageBody()
-    data: {
-      senderEmail: string;
-      receiverEmail: string;
-      message: string;
-    },
-  ) {
-    const savedMessage = await this.chatService.saveMessage(
-      data.senderEmail,
-      data.receiverEmail,
-      data.message,
-    );
+  // @SubscribeMessage('sendMessage')
+  // async handleMessage(
+  //   @MessageBody()
+  //   data: {
+  //     senderEmail: string;
+  //     receiverEmail: string;
+  //     message: string;
+  //   },
+  // ) {
+  //   const savedMessage = await this.chatService.saveMessage(
+  //     data.senderEmail,
+  //     data.receiverEmail,
+  //     data.message,
+  //   );
 
-    const receiverSocket = this.connectedClients.get(data.receiverEmail);
-    if (receiverSocket) {
-      receiverSocket.emit('receiveMessage', savedMessage);
-    }
+  //   const receiverSocket = this.connectedClients.get(data.receiverEmail);
+  //   if (receiverSocket) {
+  //     receiverSocket.emit('receiveMessage', savedMessage);
+  //   }
 
-    const senderSocket = this.connectedClients.get(data.senderEmail);
-    if (senderSocket) {
-      senderSocket.emit('messageSent', savedMessage);
-    }
-  }
+  //   const senderSocket = this.connectedClients.get(data.senderEmail);
+  //   if (senderSocket) {
+  //     senderSocket.emit('messageSent', savedMessage);
+  //   }
+  // }
 }
