@@ -67,4 +67,14 @@ export class UsersController {
   addPost(@Body() body: CreatePostDto): any {
     return this.usersService.addPost(body);
   }
+
+  @ApiOperation({ summary: 'Get posts' })
+  @Get('get-posts')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns the reference id and email of the user registered',
+  })
+  getPosts(): any {
+    return this.usersService.findAllPosts();
+  }
 }

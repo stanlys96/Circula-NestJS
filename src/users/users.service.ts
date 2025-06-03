@@ -139,4 +139,12 @@ export class UsersService {
 
     return this.postRepository.save(post);
   }
+
+  async findAllPosts() {
+    return this.postRepository.find({
+      order: {
+        created_at: 'DESC', // newest first
+      },
+    });
+  }
 }
