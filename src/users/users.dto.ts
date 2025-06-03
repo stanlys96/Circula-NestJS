@@ -44,6 +44,44 @@ export class CreateUserDto {
   whatsAppNumber: string;
 }
 
+export class UpdateUserDto {
+  @ApiProperty({ description: 'The email of the user' })
+  email: string;
+
+  @ApiProperty({ description: 'The username of the user' })
+  username: string;
+
+  @ApiProperty({ description: 'The age of the user' })
+  age: number;
+
+  @ApiProperty()
+  bloodType: string;
+
+  @ApiProperty()
+  fullName: string;
+
+  @ApiProperty()
+  gpsAllowed: boolean;
+
+  @ApiProperty()
+  hasChosenDonateBlood: boolean;
+
+  @ApiProperty()
+  hasRegistered: boolean;
+
+  @ApiProperty()
+  homeLocation: string;
+
+  @ApiProperty()
+  legalDocumentUrl: string;
+
+  @ApiProperty()
+  photoUrl: string;
+
+  @ApiProperty()
+  whatsAppNumber: string;
+}
+
 export class LoginDto {
   @ApiProperty()
   email: string;

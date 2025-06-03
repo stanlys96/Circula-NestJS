@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto, LoginDto } from './users.dto';
+import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -95,7 +95,7 @@ export class UsersService {
     }
   }
 
-  async updateUserDetails(updateUserDto: CreateUserDto) {
+  async updateUserDetails(updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOne({
       where: { email: updateUserDto?.email },
     });
