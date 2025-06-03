@@ -25,7 +25,7 @@ export class ChatService {
     return this.chatRepo.find({
       where: [{ senderEmail: email }, { receiverEmail: email }],
       order: {
-        createdAt: 'DESC',
+        createdAt: 'ASC',
       },
     });
   }
