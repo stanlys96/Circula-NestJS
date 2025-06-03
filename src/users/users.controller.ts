@@ -42,4 +42,14 @@ export class UsersController {
   registerUserWithGoogle(@Body() body: CreateUserDto): any {
     return this.usersService.registerWithGoogle(body);
   }
+
+  @ApiOperation({ summary: 'Update Details' })
+  @Post('update-details')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns the reference id and email of the user registered',
+  })
+  updateUserDetails(@Body() body: CreateUserDto): any {
+    return this.usersService.updateUserDetails(body);
+  }
 }

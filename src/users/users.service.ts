@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -92,5 +93,26 @@ export class UsersService {
     } catch {
       return { message: 'Invalid credentials' };
     }
+  }
+
+  async updateUserDetails(updateUserDto: CreateUserDto) {
+    const user = await this.userRepository.findOne({
+      where: { email: updateUserDto?.email },
+    });
+    if (!user) {
+      throw new NotFoundException(
+        `User with email ${updateUserDto?.email} not found`,
+      );
+    }
+
+    Object.assign(user, updateUserDto);
+    await this.userRepository.save(user);
+
+    return {
+      message: 'User updated successfully',
+      user: {
+        email: user.email,
+      },
+    };
   }
 }
