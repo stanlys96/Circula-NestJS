@@ -142,6 +142,7 @@ export class UsersService {
 
   async findAllPosts() {
     return this.postRepository.find({
+      relations: ['user'],
       order: {
         created_at: 'DESC', // newest first
       },
