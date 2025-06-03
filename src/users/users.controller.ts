@@ -1,7 +1,12 @@
 import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { CreateUserDto, LoginDto } from './users.dto';
+import {
+  CreatePostDto,
+  CreateUserDto,
+  LoginDto,
+  UpdateUserDto,
+} from './users.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -49,7 +54,17 @@ export class UsersController {
     status: HttpStatus.OK,
     description: 'Returns the reference id and email of the user registered',
   })
-  updateUserDetails(@Body() body: CreateUserDto): any {
+  updateUserDetails(@Body() body: UpdateUserDto): any {
     return this.usersService.updateUserDetails(body);
+  }
+
+  @ApiOperation({ summary: 'Add post' })
+  @Post('add-post')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns the reference id and email of the user registered',
+  })
+  addPost(@Body() body: CreatePostDto): any {
+    return this.usersService.addPost(body);
   }
 }

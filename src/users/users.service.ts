@@ -7,9 +7,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto, LoginDto, UpdateUserDto } from './users.dto';
+import {
+  CreatePostDto,
+  CreateUserDto,
+  LoginDto,
+  UpdateUserDto,
+} from './users.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Post } from 'src/posts/entities/posts.entity';
 
 function generateRandomString(length: number = 16): string {
   const chars =
@@ -27,6 +33,8 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    @InjectRepository(Post)
+    private postRepository: Repository<Post>,
   ) {}
 
   async registerWithGoogle(createUserDto: CreateUserDto) {
@@ -114,5 +122,21 @@ export class UsersService {
         email: user.email,
       },
     };
+  }
+
+  async addPost(createPostDto: CreatePostDto) {
+    const user = await this.userRepository.findOneBy({
+      email: createPostDto.email,
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const post = this.postRepository.create({
+      ...createPostDto,
+      user,
+    });
+
+    return this.postRepository.save(post);
   }
 }

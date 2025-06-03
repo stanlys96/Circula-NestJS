@@ -89,3 +89,14 @@ export class LoginDto {
   @ApiProperty()
   password: string;
 }
+
+export class CreatePostDto {
+  @ApiProperty({ description: 'The email of the user' })
+  email: string;
+
+  @ApiProperty()
+  created_at: string;
+
+  @ApiProperty()
+  text: string;
+}
