@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ChatModule } from './chat/chat.module';
 import { UploadController } from './upload/upload.controller';
 import { UploadService } from './upload/upload.service';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UploadService } from './upload/upload.service';
       synchronize: true, // Set to false in production
     }),
     ChatModule,
+    ReportModule,
   ],
   controllers: [AppController, UploadController],
   providers: [AppService, UploadService],
